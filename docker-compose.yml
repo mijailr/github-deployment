@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  tests:
+    build: ./tests
+    volumes:
+      - ".:/plugin"
+  lint:
+    image: buildkite/plugin-linter
+    command: ['--id', 'mijailr/github-deployment-buildkite-plugin']
+    volumes:
+      - ".:/plugin:ro"
