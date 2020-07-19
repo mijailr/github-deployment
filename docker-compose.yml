@@ -6,6 +6,6 @@ services:
       - ".:/plugin"
   lint:
     image: buildkite/plugin-linter
-    command: ['--id', 'mijailr/github-deployment-buildkite-plugin']
+    command: ['--id', 'mijailr/github-deployment']
     volumes:
       - ".:/plugin:ro"
