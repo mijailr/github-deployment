@@ -1,0 +1,30 @@
+#!/bin/bash
+
+ENVIRONMENT="${BUILDKITE_PLUGIN_GITHUB_DEPLOYMENT_ENVIRONMENT}"
+GITHUB_TOKEN="${BUILDKITE_PLUGIN_GITHUB_DEPLOYMENT_GITHUB_TOKEN}"
+REPOSITORY="${BUILDKITE_PLUGIN_GITHUB_DEPLOYMENT_REPOSITORY}"
+
+REF="${BUILDKITE_COMMIT}"
+
+if [[ -n "${BUILDKITE_TAG}" ]]; then
+  REF=${BUILDKITE_TAG}
+fi
+
+cat <<EOF >create-deployment.json
+{
+  "ref": "${REF}",
+  "environment": "${ENVIRONMENT}",
+  "required_contexts": []
+}
+EOF
+
+
+DEPLOYMENT_ID=$(curl -X POST "https://api.github.com/repos/${REPOSITORY}/deployments" \
+  -H "Authorization: token ${GITHUB_TOKEN}" \
+  -H "Content-Type: text/json; charset=utf-8" \
+  -H "Accept: application/vnd.github.ant-man-preview+json" \
+  --data-binary @create-deployment.json | jq -r .id)
+
+echo Deployment $DEPLOYMENT_ID created successfully
+
+buildkite-agent meta-data set "deployment-id" "${DEPLOYMENT_ID}"
