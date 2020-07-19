@@ -1,0 +1,14 @@
+name: github-deployment
+description: Create and report status on Github deployments
+author: https://github.com/mijailr
+requirements:
+  - jq
+configuration:
+  properties:
+    environment:
+      type: string
+    repository:
+      type: string
+    github_token:
+      type: string  
+  additionalProperties: false
